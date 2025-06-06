@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WALKARA</title>
-  <link rel="stylesheet" href="checkout.css" />
+  <link rel="stylesheet" href="home.css" />
   <!-- Add Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
   <header>
     <div class="navbar">
@@ -17,15 +19,19 @@
         <div class="menu-icon">☰</div>
         <div class="logo">WALKARA</div>
         <nav>
-          <a href="home.html">Men</a>
-          <a href="women.html">Women</a>
+          <a href="home.html" class="#">Men</a>
+          <a href="women.html" class="#">Women</a>
           <a href="kids.html" class="#">Kids</a>
-          <a href="sports.html" class="#">Sport</a>
-          <a href="checkout.html" class="active cart">🛒<span class="cart-count">0</span></a>
+          <a href="sports.html" class="active">Sport</a>
+          <a href="checkout.html" class="cart">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-count">0</span>
+          </a>
         </nav>
       </div>
       <div class="socials">
-        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon" id="userProfile" />
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon"
+          id="userProfile" />
         <span class="follow-text">FOLLOW US ON</span>
         <a href="https://facebook.com" target="_blank">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook Logo" class="social-icon" />
@@ -37,34 +43,18 @@
     </div>
   </header>
 
-  <main class="cart-page">
-    <h2>YOUR CART</h2>
-    <div class="cart-container">
-      <div class="cart-left">
-        <div class="cart-header">
-          <span>PRODUCT</span>
-          <span>PRICE</span>
-          <span>QUANTITY</span>
-        </div>
-        <div id="cartItemsContainer">
-          <!-- Cart items will be loaded here dynamically -->
-        </div>
-      </div>
+  <main>
+    <div class="container">
+      <section class="product-grid">
 
-      <div class="cart-right">
-        <h3>CHECKOUT</h3>
-        <div id="checkoutItemsContainer">
-          <!-- Checkout items will be loaded here dynamically -->
-        </div>
-        <hr />
-        <div class="subtotal">
-          <strong>SUBTOTAL:</strong> <span id="subtotalAmount">0</span>
-        </div>
-        <button class="place-order">PLACE ORDER</button>
-      </div>
+      </section>
     </div>
+    <!-- Flying element for animation -->
+    <div id="flyingProduct" class="flying-product"></div>
   </main>
 
-  <script src="checkout.js"></script>
+  <script src="script.js"></script>
+  <script src="women.js"></script>
 </body>
+
 </html>

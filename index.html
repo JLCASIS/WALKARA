@@ -16,9 +16,9 @@
     <!-- LOGIN BOX -->
     <div class="login-box" id="loginBox">
       <h2>LOG IN</h2>
-      <input type="text" placeholder="Username">
-      <input type="password" placeholder="Password">
-      <button class="login-btn">Login</button>
+      <input type="text" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="login-btn" id="loginBtn">Login</button>
       
       <div class="divider"></div>
       <button class="signup-btn" id="showSignup">Signup</button>
@@ -33,25 +33,9 @@
       <button class="signup-btn" id="signupBtn">Register</button>
 
       <p>Have an account? <a href="#" id="showLogin">LOGIN</a></p>
-       <script>
-
-    const loginBox = document.getElementById('loginBox');
-    const signupBox = document.getElementById('signupBox');
-    const showSignup = document.getElementById('showSignup');
-    const showLogin = document.getElementById('showLogin');
-
-    showSignup.addEventListener('click', () => {
-      loginBox.style.display = 'none';
-      signupBox.style.display = 'block';
-    });
-
-    showLogin.addEventListener('click', () => {
-      signupBox.style.display = 'none';
-      loginBox.style.display = 'block';
-    });
-  </script>
     </div>
   </div>
 
+  <script type="module" src="script.js"></script>
 </body>
 </html>

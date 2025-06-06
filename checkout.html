@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WALKARA</title>
   <link rel="stylesheet" href="checkout.css" />
+  <!-- Add Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <header>
@@ -14,14 +18,14 @@
         <div class="logo">WALKARA</div>
         <nav>
           <a href="home.html">Men</a>
-         <a href="#">Women</a>
+          <a href="#">Women</a>
           <a href="#">Kids</a>
           <a href="#">Sports</a>
-          <a href="checkout.html" class="active">🛒</a>
+          <a href="checkout.html" class="active cart">🛒<span class="cart-count">0</span></a>
         </nav>
       </div>
       <div class="socials">
-        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon" />
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon" id="userProfile" />
         <span class="follow-text">FOLLOW US ON</span>
         <a href="https://facebook.com" target="_blank">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook Logo" class="social-icon" />
@@ -42,35 +46,25 @@
           <span>PRICE</span>
           <span>QUANTITY</span>
         </div>
-        <div class="cart-item">
-          <img src="shoes/men/1.webp" alt="Nike Dunk Low Retro" />
-          <div class="details">
-            <p class="product-name">Nike Dunk Low Retro</p>
-            <p class="product-size">SIZE: 9.5</p>
-          </div>
-          <p class="price">8,900</p>
-          <div class="quantity">
-            <button>-</button>
-            <input type="text" value="1" readonly />
-            <button>+</button>
-          </div>
-          <button class="delete">🗑️</button>
+        <div id="cartItemsContainer">
+          <!-- Cart items will be loaded here dynamically -->
         </div>
       </div>
 
       <div class="cart-right">
         <h3>CHECKOUT</h3>
-        <div class="checkout-item">
-          <p>Nike Dunk Low Retro</p>
-          <p>8,900</p>
+        <div id="checkoutItemsContainer">
+          <!-- Checkout items will be loaded here dynamically -->
         </div>
         <hr />
         <div class="subtotal">
-          <strong>SUBTOTAL:</strong> <span>8,900</span>
+          <strong>SUBTOTAL:</strong> <span id="subtotalAmount">0</span>
         </div>
         <button class="place-order">PLACE ORDER</button>
       </div>
     </div>
   </main>
+
+  <script src="checkout.js"></script>
 </body>
 </html>

@@ -153,3 +153,57 @@ button {
   width: 100%;
   border-radius: 4px;
 }
+/* Add these to your existing home.css */
+.flying-product {
+  position: fixed;
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 1000;
+  pointer-events: none;
+  display: none;
+}
+
+.cart-count {
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
+.product-card {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Add these to your existing home.css */
+.product-card button {
+  transition: all 0.3s ease;
+  background-color: #000; /* Base color */
+}
+
+.product-card button.added {
+  background-color: #4CAF50;
+  color: white;
+}
+
+/* Keep your existing animation */
+@keyframes buttonPulse {
+  0% {
+    transform: scale(1);
+    background-color: #4CAF50;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    background-color: #000;
+  }
+}

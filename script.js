@@ -5,8 +5,13 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+import { 
+    getFirestore, 
+    doc, 
+    setDoc 
+} from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-// Firebase config
+// Initialize Firebase at the top level
 const firebaseConfig = {
     apiKey: "AIzaSyAxApCdOhgO09fIB8_Qw-NSCLPi72aW1Q8",
     authDomain: "walkara.firebaseapp.com",
@@ -17,9 +22,9 @@ const firebaseConfig = {
     measurementId: "G-5T4ZGKW3Q4"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -31,10 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const showSignupBtn = document.getElementById('showSignup');
     const showLoginLink = document.getElementById('showLogin');
     
+    // Debug: Check if elements exist
+    console.log({
+        loginBox,
+        signupBox,
+        showSignupBtn,
+        showLoginLink
+    });
+    
     // Toggle between forms
     if (showSignupBtn) {
         showSignupBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log("Signup button clicked");
             if (loginBox && signupBox) {
                 loginBox.style.display = 'none';
                 signupBox.style.display = 'block';
@@ -45,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (showLoginLink) {
         showLoginLink.addEventListener('click', function(e) {
             e.preventDefault();
+            console.log("Login link clicked");
             if (loginBox && signupBox) {
                 signupBox.style.display = 'none';
                 loginBox.style.display = 'block';
@@ -58,20 +73,28 @@ document.addEventListener('DOMContentLoaded', function() {
         signupBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             
+            const username = document.getElementById('signupUsername').value;
             const email = document.getElementById('signupEmail').value;
             const password = document.getElementById('signupPassword').value;
             
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                await setDoc(doc(db, "users", user.uid), {
+                    username: username,
+                    email: email,
+                    createdAt: new Date()
+                });
                 
                 alert('Account created successfully!');
                 signupBox.style.display = 'none';
                 loginBox.style.display = 'block';
                 
                 // Clear form
+                document.getElementById('signupUsername').value = '';
                 document.getElementById('signupEmail').value = '';
                 document.getElementById('signupPassword').value = '';
-                document.getElementById('signupUsername').value = '';
                 
             } catch (error) {
                 console.error("Error signing up:", error);

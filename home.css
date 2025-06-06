@@ -1,0 +1,155 @@
+/* Reset and base */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+}
+
+header {
+  background-color: #000;
+  color: #fff;
+  padding: 25px 25px; /* left and right padding = 25px */
+}
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+nav a.active {
+  font-weight: bold;
+}
+
+.cart {
+  font-size: 20px;
+}
+
+.socials {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.user-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.socials img {
+  width: 30px;
+  height: 30px;
+}
+
+.follow-text {
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-right: 4px;
+}
+
+/* Main area */
+main {
+  background-color: #b10e0e;
+  flex: 1;
+  padding: 20px 25px; /* Match header padding */
+  width: 100%;
+  box-sizing: border-box;
+  display: block; /* Remove centering effect */
+
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* was 180px */
+  gap: 25px; /* slightly larger spacing */
+  width: 100%;
+}
+
+
+
+/* Product Card */
+.product-card {
+  background-color: #fff;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+  height: auto;
+  min-height: 240px;
+}
+
+.product-card:hover {
+  transform: scale(1.03);
+}
+
+/* Image inside product card */
+.product-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Price */
+.price {
+  color: #000;
+  font-weight: bold;
+  margin: 8px 0 6px;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Button */
+button {
+  background-color: #000;
+  color: #fff;
+  padding: 6px 10px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+}

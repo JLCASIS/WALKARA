@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Signup</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <img src="logo.png" alt="Centered Image" style="max-width: 100%; height: auto; border-radius: 5px;">
+    </div>
+
+    <!-- LOGIN BOX -->
+    <div class="login-box" id="loginBox">
+      <h2>LOG IN</h2>
+      <input type="text" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <button class="login-btn" id="loginBtn">Login</button>
+      
+      <div class="divider"></div>
+      <button class="signup-btn" id="showSignup">Signup</button>
+    </div>
+
+    <!-- SIGNUP BOX (hidden initially) -->
+    <div class="login-box" id="signupBox" style="display: none;">
+      <h2>SIGN UP</h2>
+      <input type="text" id="signupUsername" placeholder="Username">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <button class="signup-btn" id="signupBtn">Register</button>
+
+      <p>Have an account? <a href="#" id="showLogin">LOGIN</a></p>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
+

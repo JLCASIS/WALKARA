@@ -55,6 +55,7 @@ function setupEventListeners() {
 }
 
 // Handle cart actions
+// Handle cart actions
 function handleCartActions(e) {
   const cartItem = e.target.closest('.cart-item');
   if (!cartItem) return;
@@ -65,9 +66,8 @@ function handleCartActions(e) {
   if (itemIndex === -1) return;
   
   if (e.target.classList.contains('delete')) {
-    // Remove item
-    cartItems.splice(itemIndex, 1);
-    updateCart();
+    // Show confirmation before removing
+    showConfirmationModal(productId, itemIndex);
   } else if (e.target.classList.contains('increase-qty')) {
     // Increase quantity
     cartItems[itemIndex].quantity += 1;
@@ -79,6 +79,47 @@ function handleCartActions(e) {
       updateCart();
     }
   }
+}
+
+// Show confirmation modal before deleting
+function showConfirmationModal(productId, itemIndex) {
+  // Create modal elements
+  const modalOverlay = document.createElement('div');
+  modalOverlay.className = 'modal-overlay';
+  
+  const modal = document.createElement('div');
+  modal.className = 'confirmation-modal';
+  
+  modal.innerHTML = `
+    <h3>Remove Item</h3>
+    <p>Are you sure you want to remove this item from your cart?</p>
+    <div class="confirmation-buttons">
+      <button class="confirm-delete">Yes, Remove</button>
+      <button class="cancel-delete">Cancel</button>
+    </div>
+  `;
+  
+  modalOverlay.appendChild(modal);
+  document.body.appendChild(modalOverlay);
+  
+  // Add event listeners to buttons
+  modal.querySelector('.confirm-delete').addEventListener('click', () => {
+    // Remove item
+    cartItems.splice(itemIndex, 1);
+    updateCart();
+    document.body.removeChild(modalOverlay);
+  });
+  
+  modal.querySelector('.cancel-delete').addEventListener('click', () => {
+    document.body.removeChild(modalOverlay);
+  });
+  
+  // Close modal when clicking outside
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+      document.body.removeChild(modalOverlay);
+    }
+  });
 }
 
 // Load cart items from Firestore

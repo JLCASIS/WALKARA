@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,6 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 </head>
+
 <body>
   <header>
     <div class="navbar">
@@ -21,11 +23,15 @@
           <a href="#">Women</a>
           <a href="#">Kids</a>
           <a href="#">Sports</a>
-          <a href="checkout.html" class="cart">🛒<span class="cart-count">0</span></a>
+          <a href="checkout.html" class="cart">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-count">0</span>
+          </a>
         </nav>
       </div>
       <div class="socials">
-        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon" id="userProfile" />
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon"
+          id="userProfile" />
         <span class="follow-text">FOLLOW US ON</span>
         <a href="https://facebook.com" target="_blank">
           <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook Logo" class="social-icon" />
@@ -40,7 +46,7 @@
   <main>
     <div class="container">
       <section class="product-grid">
-        <!-- Products will be dynamically loaded from JavaScript -->
+
       </section>
     </div>
     <!-- Flying element for animation -->
@@ -50,4 +56,5 @@
   <script src="script.js"></script>
   <script src="home.js"></script>
 </body>
+
 </html>

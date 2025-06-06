@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Signup</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <img src="logo.png" alt="Centered Image" style="max-width: 100%; height: auto; border-radius: 5px;">
+    </div>
+
+    <!-- LOGIN BOX -->
+    <div class="login-box" id="loginBox">
+      <h2>LOG IN</h2>
+      <input type="text" placeholder="Username">
+      <input type="password" placeholder="Password">
+      <button class="login-btn">Login</button>
+      
+      <div class="divider"></div>
+      <button class="signup-btn" id="showSignup">Signup</button>
+    </div>
+
+    <!-- SIGNUP BOX (hidden initially) -->
+    <div class="login-box" id="signupBox" style="display: none;">
+      <h2>SIGN UP</h2>
+      <input type="text" id="signupUsername" placeholder="Username">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <button class="signup-btn" id="signupBtn">Register</button>
+
+      <p>Have an account? <a href="#" id="showLogin">LOGIN</a></p>
+       <script>
+
+    const loginBox = document.getElementById('loginBox');
+    const signupBox = document.getElementById('signupBox');
+    const showSignup = document.getElementById('showSignup');
+    const showLogin = document.getElementById('showLogin');
+
+    showSignup.addEventListener('click', () => {
+      loginBox.style.display = 'none';
+      signupBox.style.display = 'block';
+    });
+
+    showLogin.addEventListener('click', () => {
+      signupBox.style.display = 'none';
+      loginBox.style.display = 'block';
+    });
+  </script>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -241,3 +241,93 @@ function updateCart() {
 
 // Initialize the checkout page
 document.addEventListener('DOMContentLoaded', initCheckout);
+
+// Add this at the top with other DOM elements
+const placeOrderBtn = document.querySelector('.place-order');
+const shippingModal = document.getElementById('shippingModal');
+const successModal = document.getElementById('successModal');
+const shippingForm = document.getElementById('shippingForm');
+
+// Add this to setupEventListeners()
+placeOrderBtn.addEventListener('click', () => {
+  if (cartItems.length === 0) {
+    alert('Your cart is empty');
+    return;
+  }
+  shippingModal.style.display = 'flex';
+});
+
+// Handle shipping form submission
+shippingForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  placeOrder();
+});
+
+// Close success modal
+document.querySelector('.close-success')?.addEventListener('click', () => {
+  successModal.style.display = 'none';
+});
+
+// Close modals when clicking outside
+document.querySelectorAll('.modal-overlay').forEach(modal => {
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
+});
+
+// Place order function
+function placeOrder() {
+  if (!currentUser || cartItems.length === 0) return;
+
+  // Get shipping info from form
+  const shippingInfo = {
+    firstName: document.getElementById('firstName').value,
+    middleName: document.getElementById('middleName').value,
+    lastName: document.getElementById('lastName').value,
+    address: document.getElementById('address').value,
+    municipality: document.getElementById('municipality').value,
+    province: document.getElementById('province').value
+  };
+
+  // Calculate total
+  const subtotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+
+  // Create order data
+  const orderData = {
+    userId: currentUser.uid,
+    items: cartItems,
+    shippingInfo: shippingInfo,
+    total: subtotal,
+    status: 'pending',
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  // Add order to Firestore
+  db.collection('orders').add(orderData)
+    .then(() => {
+      // Clear the cart
+      return db.collection('users').doc(currentUser.uid).collection('cart').get()
+        .then(snapshot => {
+          const batch = db.batch();
+          snapshot.docs.forEach(doc => {
+            batch.delete(doc.ref);
+          });
+          return batch.commit();
+        });
+    })
+    .then(() => {
+      // Show success message
+      shippingModal.style.display = 'none';
+      successModal.style.display = 'flex';
+      
+      // Clear local cart
+      cartItems = [];
+      renderCartItems();
+    })
+    .catch(error => {
+      console.error("Error placing order:", error);
+      alert("There was an error placing your order. Please try again.");
+    });
+}

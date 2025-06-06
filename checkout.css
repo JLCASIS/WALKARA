@@ -259,6 +259,7 @@ main {
   padding: 20px;
   border-radius: 8px;
   width: 300px;
+
   text-align: center;
 }
 
@@ -287,4 +288,63 @@ main {
 
 .cancel-delete {
   background-color: #f0f0f0;
+}
+/* Shipping Form Styles */
+.shipping-form {
+  background-color: rgb(217, 217, 217);
+  padding: 30px;
+  border-radius: 25px;
+  width: 320px;
+  max-width: 90%;
+}
+
+.shipping-form h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.confirm-shipping {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #b10e0e;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-success {
+  margin-top: 20px;
+  width: 100%;
+  background-color: #b10e0e;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
 }

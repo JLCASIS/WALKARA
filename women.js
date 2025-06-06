@@ -15,25 +15,25 @@ const db = firebase.firestore();
 
 // Product data
 const products = [
-  //MEN category
-  { id: 1, image: "shoes/men/1.webp", name: "Nike Dunk Low Retro", price: 5399 },
-  { id: 2, image: "shoes/men/10.webp", name: "Nike Air Max", price: 4200 },
-  { id: 3, image: "shoes/men/11.jfif", name: "Adidas Superstar", price: 4201 },
-  { id: 4, image: "shoes/men/12.jpg", name: "Puma RS-X", price: 4202 },
-  { id: 5, image: "shoes/men/13.jpg", name: "New Balance 574", price: 4203 },
-  { id: 6, image: "shoes/men/14.jpeg", name: "Converse Chuck Taylor", price: 4204 },
-  { id: 7, image: "shoes/men/15.webp", name: "Vans Old Skool", price: 4202 },
-  { id: 8, image: "shoes/men/2.jpg", name: "Nike Air Force 1", price: 4206 },
-  { id: 9, image: "shoes/men/3.webp", name: "Adidas Ultraboost", price: 4205 },
-  { id: 10, image: "shoes/men/4.jpg", name: "Reebok Classic", price: 4208 },
-  { id: 11, image: "shoes/men/5.avif", name: "Nike Jordan 1", price: 4207 },
-  { id: 12, image: "shoes/men/6.jpg", name: "Adidas NMD", price: 4209 },
-  { id: 13, image: "shoes/men/7.webp", name: "Puma Cali", price: 4210 },
-  { id: 14, image: "shoes/men/8.avif", name: "Nike Blazer", price: 4211 },
-  { id: 15, image: "shoes/men/16.png", name: "Asics Gel-Lyte", price: 4223 },
-  { id: 16, image: "shoes/men/17.jpg", name: "Skechers Go Walk", price: 4225 },
-  { id: 17, image: "shoes/men/18.webp", name: "Fila Disruptor", price: 4220 },
-  { id: 18, image: "shoes/men/9.webp", name: "Nike React", price: 4260 } 
+  //WOMEN category
+  { id: 19, image: "shoes/women/1.jpg", name: "Fashion Shoes", price: 1500 },
+  { id: 20, image: "shoes/women/2.webp", name: "Nike Free RN", price: 2400 },
+  { id: 21, image: "shoes/women/3.webp", name: "Skechers Women Max", price: 4932 },
+  { id: 22, image: "shoes/women/4.jpg", name: "Adidas Violet", price: 3455 },
+  { id: 23, image: "shoes/women/5.jpeg", name: "Nike Black/Voilet", price: 4114 },
+  { id: 24, image: "shoes/women/6.avif", name: "Hoka Black", price: 3000 },
+  { id: 25, image: "shoes/women/7.png", name: "Hoka Blue", price: 2530 },
+  { id: 26, image: "shoes/women/8.jpeg", name: "Puma Peachy", price: 4242 },
+  { id: 27, image: "shoes/women/9.png", name: "New Balance Scary Porty", price: 3280},
+  { id: 28, image: "shoes/women/10.jpg", name: "Xporty Womany", price: 2400 },
+  { id: 29, image: "shoes/women/11.jfif", name: "Nike Black Pink Area", price: 3900 },
+  { id: 30, image: "shoes/women/12.jpg", name: "Fashion Pinky Worty", price: 1500 },
+  { id: 31, image: "shoes/women/13.webp", name: "Aexis White Off On", price: 3200 },
+  { id: 32, image: "shoes/women/14.jpg", name: "Fashion Designer Off The Back", price: 1400 },
+  { id: 33, image: "shoes/women/15.avif", name: "Porkey Kunchi", price: 2400 },
+  { id: 34, image: "shoes/women/16.webp", name: "Voopet Muchet", price: 2500 },
+  { id: 35, image: "shoes/women/17.jpg", name: "Fashion Pinkish", price: 1000 },
+  { id: 36, image: "shoes/women/18.webp", name: "Hielo Goddie", price: 2430 } 
 ];
 
 // DOM elements

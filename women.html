@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WALKARA</title>
+  <link rel="stylesheet" href="home.css" />
+  <!-- Add Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="navbar">
+      <div class="left-group">
+        <div class="menu-icon">☰</div>
+        <div class="logo">WALKARA</div>
+        <nav>
+          <a href="home.html" class="#">Men</a>
+          <a href="women.html" class="active">Women</a>
+          <a href="#">Kids</a>
+          <a href="#">Sports</a>
+          <a href="checkout.html" class="cart">
+            <span class="cart-icon">🛒</span>
+            <span class="cart-count">0</span>
+          </a>
+        </nav>
+      </div>
+      <div class="socials">
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon"
+          id="userProfile" />
+        <span class="follow-text">FOLLOW US ON</span>
+        <a href="https://facebook.com" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook Logo" class="social-icon" />
+        </a>
+        <a href="https://instagram.com" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram Logo" class="social-icon" />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="product-grid">
+
+      </section>
+    </div>
+    <!-- Flying element for animation -->
+    <div id="flyingProduct" class="flying-product"></div>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="women.js"></script>
+</body>
+
+</html>

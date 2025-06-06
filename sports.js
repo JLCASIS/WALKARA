@@ -15,25 +15,25 @@ const db = firebase.firestore();
 
 // Product data
 const products = [
-  //Kids category
-  { id: 37, image: "shoes/kids/1.jpg", name: "Kids M Blue/White", price: 530 },
-  { id: 38, image: "shoes/kids/2.webp", name: "Kids M Gray/Black", price: 500 },
-  { id: 39, image: "shoes/kids/3.webp", name: "Kids M Red", price: 450 },
-  { id: 40, image: "shoes/kids/4.jpg", name: "Kids M Blue", price: 600 },
-  { id: 41, image: "shoes/kids/5.webp", name: "Kids M White", price: 299 },
-  { id: 42, image: "shoes/kids/6.webp", name: "Kids F Pink", price: 600 },
-  { id: 43, image: "shoes/kids/7.jpg", name: "Kids F Yellow", price: 740 },
-  { id: 44, image: "shoes/kids/8.jpg", name: "Kids M Dark Blue", price: 390 },
-  { id: 45, image: "shoes/kids/9.webp", name: "Kids M Black", price: 490},
-  { id: 46, image: "shoes/kids/10.webp", name: "Kids M Batman", price: 800 },
-  { id: 47, image: "shoes/kids/11.jpg", name: "Kids M Adventure", price: 590 },
-  { id: 48, image: "shoes/kids/12.jpg", name: "Kids M Sports Walk", price: 890 },
-  { id: 49, image: "shoes/kids/13.webp", name: "Kids M High Cut Gray", price: 999 },
-  { id: 50, image: "shoes/kids/14.avif", name: "Kids M High Cut Gray/White", price: 790 },
-  { id: 51, image: "shoes/kids/15.avif", name: "Kids M Sky Blue", price: 300 },
-  { id: 52, image: "shoes/kids/16.jpg", name: "Kids M Orange", price: 699 },
-  { id: 53, image: "shoes/kids/17.jpg", name: "Kids F Violet Dora", price: 999 },
-  { id: 54, image: "shoes/kids/18.jpg", name: "Kids F Violet", price: 890 } 
+  //Spoerts category
+  { id: 55, image: "shoes/sports/1.jpeg", name: "Adidas Blue Color way", price: 3800 },
+  { id: 56, image: "shoes/sports/2.jpeg", name: "Puma Lamelo Orange/White", price: 6400 },
+  { id: 57, image: "shoes/sports/3.jpeg", name: "Nike Precision 7 Light/Blue", price: 4900 },
+  { id: 58, image: "shoes/sports/4.jpeg", name: "Nike Precision 7 Gray/White", price: 4900 },
+  { id: 59, image: "shoes/sports/5.jpeg", name: "Nike Precision 5 Gray/White", price: 3500 },
+  { id: 60, image: "shoes/sports/6.jpeg", name: "Nike Precision 7 Orange", price: 4900 },
+  { id: 61, image: "shoes/sports/7.jpeg", name: "Nike Precision 5 Blue/Light Blue", price: 3500 },
+  { id: 62, image: "shoes/sports/8.jpeg", name: "Nike Kyrie 4 Black/Green", price: 5000 },
+  { id: 63, image: "shoes/sports/9.jpeg", name: "Nike Kyrie 4 Black/White", price: 5000},
+  { id: 64, image: "shoes/sports/10.jpeg", name: "Nike Kyrie 4 Violet/Blue", price: 6000 },
+  { id: 65, image: "shoes/sports/11.jpg", name: "Nike M Light Blue", price: 4500 },
+  { id: 66, image: "shoes/sports/12.webp", name: "Nike Precision 5 Purple/White", price: 5200 },
+  { id: 67, image: "shoes/sports/13.jpg", name: "Nike White Off On", price: 5000 },
+  { id: 68, image: "shoes/sports/14.jpeg", name: "Nike Black Mamba Off White/Gray", price: 7000 },
+  { id: 69, image: "shoes/sports/15.webp", name: "Nike KD 5 Gray/Black", price: 6500 },
+  { id: 70, image: "shoes/sports/16.jpg", name: "Under Armour Curry 5 Red/Black", price: 8000 },
+  { id: 71, image: "shoes/sports/17.webp", name: "Under Armour Curry 5 Blue/Black", price: 8000 },
+  { id: 72, image: "shoes/sports/18.jfif", name: "Nike Precision 5 Black/White", price: 5000 } 
 ];
 
 // DOM elements

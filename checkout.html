@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WALKARA</title>
+  <link rel="stylesheet" href="checkout.css" />
+</head>
+<body>
+  <header>
+    <div class="navbar">
+      <div class="left-group">
+        <div class="menu-icon">☰</div>
+        <div class="logo">WALKARA</div>
+        <nav>
+          <a href="home.html">Men</a>
+         <a href="#">Women</a>
+          <a href="#">Kids</a>
+          <a href="#">Sports</a>
+          <a href="checkout.html" class="active">🛒</a>
+        </nav>
+      </div>
+      <div class="socials">
+        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077012.png" alt="User Profile" class="user-icon" />
+        <span class="follow-text">FOLLOW US ON</span>
+        <a href="https://facebook.com" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook Logo" class="social-icon" />
+        </a>
+        <a href="https://instagram.com" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram Logo" class="social-icon" />
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="cart-page">
+    <h2>YOUR CART</h2>
+    <div class="cart-container">
+      <div class="cart-left">
+        <div class="cart-header">
+          <span>PRODUCT</span>
+          <span>PRICE</span>
+          <span>QUANTITY</span>
+        </div>
+        <div class="cart-item">
+          <img src="shoes/men/1.webp" alt="Nike Dunk Low Retro" />
+          <div class="details">
+            <p class="product-name">Nike Dunk Low Retro</p>
+            <p class="product-size">SIZE: 9.5</p>
+          </div>
+          <p class="price">8,900</p>
+          <div class="quantity">
+            <button>-</button>
+            <input type="text" value="1" readonly />
+            <button>+</button>
+          </div>
+          <button class="delete">🗑️</button>
+        </div>
+      </div>
+
+      <div class="cart-right">
+        <h3>CHECKOUT</h3>
+        <div class="checkout-item">
+          <p>Nike Dunk Low Retro</p>
+          <p>8,900</p>
+        </div>
+        <hr />
+        <div class="subtotal">
+          <strong>SUBTOTAL:</strong> <span>8,900</span>
+        </div>
+        <button class="place-order">PLACE ORDER</button>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

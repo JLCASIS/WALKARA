@@ -43,7 +43,7 @@ function setupAuthListener() {
     } else {
       // User is signed out
       userProfile.src = "https://cdn-icons-png.flaticon.com/512/1077/1077012.png";
-      alert("Please sign in to view your cart");
+      alert("Successfully Logout.");
       window.location.href = "home.html";
     }
   });

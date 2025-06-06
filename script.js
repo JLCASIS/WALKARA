@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                alert('Account created successfully!');
+                alert('Account login successfully!');
                 window.location.href = 'home.html';
             } catch (error) {
                 console.error("Error logging in:", error);

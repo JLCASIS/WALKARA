@@ -31,9 +31,19 @@ header {
   gap: 25px;
 }
 
-.menu-icon {
-  font-size: 24px;
+/* Replace or update the .menu-icon styles with these */
+.logout-btn {
+  font-size: 16px;
   cursor: pointer;
+  padding: 5px 10px;
+  background-color: #b10e0e;
+  color: white;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #8a0b0b;
 }
 
 .logo {

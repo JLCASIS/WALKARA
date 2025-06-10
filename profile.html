@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Profile</title>
+  <link rel="stylesheet" href="profile.css"/>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <header class="top-bar">
+    <div class="left-side">
+      <button id="backBtn">← Back</button>
+      <h2>Profile</h2>
+    </div>
+    <button id="logoutBtn">Logout</button>
+  </header>
+
+  <section class="user-info">
+    <p id="userEmail">Loading...</p>
+  </section>
+
+  <script src="profile.js"></script>
+</body>
+</html>

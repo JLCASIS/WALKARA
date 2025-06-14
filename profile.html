@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Profile</title>
   <link rel="stylesheet" href="profile.css"/>
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
 </head>
 <body>
   <header class="top-bar">
@@ -17,11 +14,24 @@
     </div>
     <button id="logoutBtn">Logout</button>
   </header>
-
-  <section class="user-info">
-    <p id="userEmail">Loading...</p>
+  <section class="user-info" id="userProfile">
+    <div class="profile-card">
+      <div class="profile-img-wrap">
+        <img id="profilePic" src="default-avatar.png" alt="Profile Picture"/>
+        <label for="profilePicUpload" class="upload-icon" title="Change profile picture">
+          <!-- Camera Icon SVG -->
+          <svg width="28" height="28" fill="#1877f2" viewBox="0 0 24 24">
+            <path d="M12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm-4-3h2.17l.59-1.17A2 2 0 0 1 12.42 4h.97a2 2 0 0 1 1.66.83L15.83 6H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm4 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+          </svg>
+          <input type="file" id="profilePicUpload" accept="image/*" style="display:none" />
+        </label>
+      </div>
+      <div class="profile-details">
+        <div id="profileName" class="profile-name">Loading...</div>
+        <div id="profileEmail" class="profile-email"></div>
+      </div>
+    </div>
   </section>
-
-  <script src="profile.js"></script>
+  <script type="module" src="profile.js"></script>
 </body>
 </html>

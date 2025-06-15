@@ -75,37 +75,55 @@
       <h3>SHIPPING INFORMATION</h3>
       <hr style="height: 4px; background-color: black; border: none;" />
       <form id="shippingForm">
-        <div class="form-group">
-          <label for="firstName">FIRST NAME</label>
-          <input type="text" id="firstName" required>
+        <div id="oldShippingChoice" style="display: none; margin-bottom: 15px;">
+          <label>
+            <input type="radio" name="shippingOption" value="previous" checked>
+            Use my previous shipping information
+          </label>
+          <label style="margin-left:15px;">
+            <input type="radio" name="shippingOption" value="new">
+            Enter new shipping information
+          </label>
         </div>
-        <div class="form-group">
-          <label for="middleName">MIDDLE NAME</label>
-          <input type="text" id="middleName">
+        <!-- Previous info paragraph display -->
+        <div id="shippingInfoParagraph" style="display: none; background: #fff; padding: 10px; border-radius: 10px; margin-bottom: 10px;">
+          <span id="shippingInfoText"></span>
+          <span id="editShippingInfo" style="color:#b10e0e;cursor:pointer;text-decoration:underline;margin-left:12px;">Edit</span>
         </div>
-        <div class="form-group">
-          <label for="lastName">LAST NAME</label>
-          <input type="text" id="lastName" required>
-        </div>
-        <div class="form-group">
-          <label for="address">ADDRESS</label>
-          <input type="text" id="address" required>
-        </div>
-        <div class="form-group">
-          <label for="municipality">MUNICIPALITY</label>
-          <input type="text" id="municipality" required>
-        </div>
-        <div class="form-group">
-          <label for="province">PROVINCE</label>
-          <select id="province" required>
-            <option value="">SELECT PROVINCE</option>
-            <option value="Biliran">Biliran</option>
-            <option value="Eastern Samar">Eastern Samar</option>
-            <option value="Leyte">Leyte</option>
-            <option value="Northern Samar">Northern Samar</option>
-            <option value="Samar">Samar</option>
-            <option value="Southern Leyte">Southern Leyte</option>
-          </select>
+        <!-- Shipping form fields -->
+        <div id="shippingFields">
+          <div class="form-group">
+            <label for="firstName">FIRST NAME</label>
+            <input type="text" id="firstName" required>
+          </div>
+          <div class="form-group">
+            <label for="middleName">MIDDLE NAME</label>
+            <input type="text" id="middleName">
+          </div>
+          <div class="form-group">
+            <label for="lastName">LAST NAME</label>
+            <input type="text" id="lastName" required>
+          </div>
+          <div class="form-group">
+            <label for="address">ADDRESS</label>
+            <input type="text" id="address" required>
+          </div>
+          <div class="form-group">
+            <label for="municipality">MUNICIPALITY</label>
+            <input type="text" id="municipality" required>
+          </div>
+          <div class="form-group">
+            <label for="province">PROVINCE</label>
+            <select id="province" required>
+              <option value="">SELECT PROVINCE</option>
+              <option value="Biliran">Biliran</option>
+              <option value="Eastern Samar">Eastern Samar</option>
+              <option value="Leyte">Leyte</option>
+              <option value="Northern Samar">Northern Samar</option>
+              <option value="Samar">Samar</option>
+              <option value="Southern Leyte">Southern Leyte</option>
+            </select>
+          </div>
         </div>
         <button type="submit" class="confirm-shipping">CONFIRM</button>
       </form>

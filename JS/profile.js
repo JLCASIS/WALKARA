@@ -28,7 +28,14 @@ const logoutBtn = document.getElementById('logoutBtn');
 const backBtn = document.getElementById('backBtn');
 const uploadInput = document.getElementById('profilePicUpload');
 
+// Display elements
+const displayName = document.getElementById('displayName');
+const displayAddress = document.getElementById('displayAddress');
+const displayMunicipality = document.getElementById('displayMunicipality');
+const displayProvince = document.getElementById('displayProvince');
+
 let currentUserId = null;
+let currentShippingInfo = null;
 
 // Load profile data from Firestore (profiles/{userId})
 async function loadProfile(user) {
@@ -54,6 +61,33 @@ async function loadProfile(user) {
       profileEmail.textContent = user.email || "No Email";
     }
   }
+  
+  // Load shipping information from information collection
+  const informationDoc = await getDoc(doc(db, "information", user.uid));
+  if (informationDoc.exists()) {
+    const data = informationDoc.data();
+    currentShippingInfo = data;
+    displayShippingInfo(data);
+  } else {
+    displayShippingInfo(null);
+  }
+}
+
+// Display shipping information
+function displayShippingInfo(shippingInfo) {
+  if (!shippingInfo) {
+    displayName.textContent = "No information saved";
+    displayAddress.textContent = "-";
+    displayMunicipality.textContent = "-";
+    displayProvince.textContent = "-";
+    return;
+  }
+
+  const fullName = `${shippingInfo.firstName || ''}${shippingInfo.middleName ? ' ' + shippingInfo.middleName : ''} ${shippingInfo.lastName || ''}`.trim();
+  displayName.textContent = fullName || "No name provided";
+  displayAddress.textContent = shippingInfo.address || "-";
+  displayMunicipality.textContent = shippingInfo.municipality || "-";
+  displayProvince.textContent = shippingInfo.province || "-";
 }
 
 // Auth state
@@ -82,15 +116,26 @@ uploadInput.addEventListener('change', async function(e) {
     const data = await res.json();
     if (data.secure_url) {
       // 2. Save metadata in Firestore (profiles/{userId})
-      const newProfile = {
-        photoURL: data.secure_url,
-        username: profileName.textContent,
-        email: profileEmail.textContent,
-        cloudinary_public_id: data.public_id,
-        cloudinary_version: data.version,
-        uploadedAt: new Date()
-      };
-      await setDoc(doc(db, "profiles", currentUserId), newProfile, { merge: true });
+      const profileDoc = await getDoc(doc(db, "profiles", currentUserId));
+      let profileData = {};
+      
+      if (profileDoc.exists()) {
+        profileData = profileDoc.data();
+      }
+
+      profileData.photoURL = data.secure_url;
+      profileData.username = profileName.textContent;
+      profileData.email = profileEmail.textContent;
+      profileData.cloudinary_public_id = data.public_id;
+      profileData.cloudinary_version = data.version;
+      profileData.uploadedAt = new Date();
+      
+      // Preserve existing shipping info
+      if (currentShippingInfo) {
+        profileData.shippingInfo = currentShippingInfo;
+      }
+
+      await setDoc(doc(db, "profiles", currentUserId), profileData, { merge: true });
       profilePic.src = data.secure_url;
       alert("Profile picture updated!");
     } else {
@@ -104,3 +149,4 @@ uploadInput.addEventListener('change', async function(e) {
 // Logout & Back
 if (logoutBtn) logoutBtn.addEventListener('click', async () => { await signOut(auth); window.location.href = 'index.html'; });
 if (backBtn) backBtn.addEventListener('click', () => window.location.href = 'home.html');
+

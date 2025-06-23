@@ -67,8 +67,8 @@ function setupEventListeners() {
     }
     if (!currentUser) return;
 
-    // Try to fetch previous shipping info
-    previousShippingInfo = await fetchPreviousShippingInfo(currentUser.uid);
+    // Try to fetch previous shipping info from information collection
+    previousShippingInfo = await fetchUserInformation(currentUser.uid);
 
     if (previousShippingInfo) {
       oldShippingChoice.style.display = 'block';
@@ -120,15 +120,29 @@ function setupEventListeners() {
     if (usePrevious && previousShippingInfo) {
       placeOrderWithShippingInfo(previousShippingInfo);
     } else {
+      // Validate form fields when using new shipping info
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const municipality = document.getElementById('municipality').value.trim();
+      const province = document.getElementById('province').value;
+
+      if (!firstName || !lastName || !address || !municipality || !province) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
       const shippingInfo = {
-        firstName: document.getElementById('firstName').value,
-        middleName: document.getElementById('middleName').value,
-        lastName: document.getElementById('lastName').value,
-        address: document.getElementById('address').value,
-        municipality: document.getElementById('municipality').value,
-        province: document.getElementById('province').value
+        firstName: firstName,
+        middleName: document.getElementById('middleName').value.trim(),
+        lastName: lastName,
+        address: address,
+        municipality: municipality,
+        province: province
       };
-      placeOrderWithShippingInfo(shippingInfo);
+      
+      // Save to information collection and place order
+      saveUserInformationAndPlaceOrder(shippingInfo);
     }
   });
 
@@ -151,6 +165,14 @@ function setupEventListeners() {
 function showShippingInfoParagraph(info) {
   shippingFields.style.display = 'none';
   shippingInfoParagraph.style.display = 'block';
+  
+  // Remove required attributes from hidden fields to prevent validation errors
+  document.getElementById('firstName').removeAttribute('required');
+  document.getElementById('lastName').removeAttribute('required');
+  document.getElementById('address').removeAttribute('required');
+  document.getElementById('municipality').removeAttribute('required');
+  document.getElementById('province').removeAttribute('required');
+  
   // Compose nice string for info
   let name = `${info.firstName || ''}${info.middleName ? ' ' + info.middleName : ''} ${info.lastName || ''}`.trim();
   let address = `${info.address || ''}, ${info.municipality || ''}, ${info.province || ''}`;
@@ -158,18 +180,61 @@ function showShippingInfoParagraph(info) {
 }
 
 // Helper: Fetch previous shipping info (no index required)
-function fetchPreviousShippingInfo(userId) {
-  return db.collection('orders')
-    .where('userId', '==', userId)
-    .limit(1)
-    .get()
-    .then(snapshot => {
-      if (!snapshot.empty) {
-        const order = snapshot.docs[0].data();
-        return order.shippingInfo || null;
+function fetchUserInformation(userId) {
+  return db.collection('information').doc(userId).get()
+    .then(doc => {
+      if (doc.exists) {
+        return doc.data();
       }
       return null;
+    })
+    .catch(error => {
+      console.error("Error fetching user information:", error);
+      return null;
     });
+}
+
+// Save user information to information collection
+async function saveUserInformation(userId, shippingInfo) {
+  try {
+    const informationData = {
+      userId: userId,
+      firstName: shippingInfo.firstName,
+      middleName: shippingInfo.middleName,
+      lastName: shippingInfo.lastName,
+      address: shippingInfo.address,
+      municipality: shippingInfo.municipality,
+      province: shippingInfo.province,
+      updatedAt: new Date()
+    };
+
+    await db.collection('information').doc(userId).set(informationData, { merge: true });
+    console.log("User information saved successfully");
+    return true;
+  } catch (error) {
+    console.error("Error saving user information:", error);
+    return false;
+  }
+}
+
+// Save user information and place order
+async function saveUserInformationAndPlaceOrder(shippingInfo) {
+  if (!currentUser) return;
+
+  try {
+    // First save the information
+    const saveSuccess = await saveUserInformation(currentUser.uid, shippingInfo);
+    
+    if (saveSuccess) {
+      // Then place the order
+      placeOrderWithShippingInfo(shippingInfo);
+    } else {
+      alert("Failed to save information. Please try again.");
+    }
+  } catch (error) {
+    console.error("Error in saveUserInformationAndPlaceOrder:", error);
+    alert("An error occurred. Please try again.");
+  }
 }
 
 // Fill the form with previous shipping info
@@ -180,6 +245,13 @@ function fillShippingForm(info) {
   document.getElementById('address').value = info.address || '';
   document.getElementById('municipality').value = info.municipality || '';
   document.getElementById('province').value = info.province || '';
+  
+  // Add required attributes back when showing form fields
+  document.getElementById('firstName').setAttribute('required', 'required');
+  document.getElementById('lastName').setAttribute('required', 'required');
+  document.getElementById('address').setAttribute('required', 'required');
+  document.getElementById('municipality').setAttribute('required', 'required');
+  document.getElementById('province').setAttribute('required', 'required');
 }
 
 // Clear the shipping form
@@ -190,6 +262,13 @@ function clearShippingForm() {
   document.getElementById('address').value = '';
   document.getElementById('municipality').value = '';
   document.getElementById('province').value = '';
+  
+  // Add required attributes back when showing form fields
+  document.getElementById('firstName').setAttribute('required', 'required');
+  document.getElementById('lastName').setAttribute('required', 'required');
+  document.getElementById('address').setAttribute('required', 'required');
+  document.getElementById('municipality').setAttribute('required', 'required');
+  document.getElementById('province').setAttribute('required', 'required');
 }
 
 // Enable/disable shipping fields
@@ -216,7 +295,7 @@ function placeOrderWithShippingInfo(shippingInfo) {
     shippingInfo: shippingInfo,
     total: subtotal,
     status: 'pending',
-    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    createdAt: new Date()
   };
 
   // Add order to Firestore

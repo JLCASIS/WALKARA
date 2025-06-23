@@ -10,26 +10,55 @@
   <header class="top-bar">
     <div class="left-side">
       <button id="backBtn">← Back</button>
-      <h2 class="profile-title">Profile</h2>
+    </div>
+    <div class="header-title">
+      <h1>Profile</h1>
     </div>
     <button id="logoutBtn">Logout</button>
   </header>
+  
   <section class="user-info" id="userProfile">
-    <div class="profile-img-wrap">
-      <img id="profilePic" src="default-avatar.png" alt="Profile Picture"/>
-      <label for="profilePicUpload" class="upload-icon" title="Change profile picture">
-        <!-- Camera Icon SVG -->
-        <svg width="28" height="28" fill="#1877f2" viewBox="0 0 24 24">
-          <path d="M12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm-4-3h2.17l.59-1.17A2 2 0 0 1 12.42 4h.97a2 2 0 0 1 1.66.83L15.83 6H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm4 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
-        </svg>
-        <input type="file" id="profilePicUpload" accept="image/*" style="display:none" />
-      </label>
-    </div>
-    <div class="profile-details">
-      <div id="profileName" class="profile-name">Loading...</div>
-      <div id="profileEmail" class="profile-email"></div>
+    <div class="profile-card">
+      <div class="profile-img-wrap">
+        <img id="profilePic" src="default-avatar.png" alt="Profile Picture"/>
+        <label for="profilePicUpload" class="upload-icon" title="Change profile picture">
+          <!-- Camera Icon SVG -->
+          <svg width="28" height="28" fill="#1877f2" viewBox="0 0 24 24">
+            <path d="M12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm-4-3h2.17l.59-1.17A2 2 0 0 1 12.42 4h.97a2 2 0 0 1 1.66.83L15.83 6H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm4 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
+          </svg>
+          <input type="file" id="profilePicUpload" accept="image/*" style="display:none" />
+        </label>
+      </div>
+      
+      <div class="profile-details">
+        <div id="profileName" class="profile-name">Loading...</div>
+        <div id="profileEmail" class="profile-email"></div>
+      </div>
+      
+      <div class="separator-line"></div>
+      
+      <div class="information-section">
+        <h3 class="information-title">My Information</h3>
+        
+        <!-- Display Mode -->
+        <div id="shippingDisplay" class="shipping-display">
+          <div class="shipping-detail">
+            <strong>Name:</strong> <span id="displayName">No information saved</span>
+          </div>
+          <div class="shipping-detail">
+            <strong>Address:</strong> <span id="displayAddress">-</span>
+          </div>
+          <div class="shipping-detail">
+            <strong>Municipality:</strong> <span id="displayMunicipality">-</span>
+          </div>
+          <div class="shipping-detail">
+            <strong>Province:</strong> <span id="displayProvince">-</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
+
   <script type="module" src="JS/profile.js"></script>
 </body>
 </html>

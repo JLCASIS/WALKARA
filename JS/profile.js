@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, orderBy, Timestamp, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
 // Firebase config
 const firebaseConfig = {
@@ -12,7 +12,7 @@ const firebaseConfig = {
   appId: "1:456097891643:web:99cadac413780ad62de31e",
   measurementId: "G-5T4ZGKW3Q4"
 };
-
+// 
 // Cloudinary config
 const CLOUD_NAME = "dl1ueeytm";
 const UPLOAD_PRESET = "profile_upload";
@@ -31,9 +31,58 @@ const profileProvince = document.getElementById('profileProvince');
 const logoutBtn = document.getElementById('logoutBtn');
 const backBtn = document.getElementById('backBtn');
 const changeProfileBtn = document.getElementById('changeProfileBtn');
+const orderList = document.getElementById('orderList');
+const noOrders = document.getElementById('noOrders');
+const orderTemplate = document.getElementById('orderTemplate');
+const orderItemTemplate = document.getElementById('orderItemTemplate');
 
 let currentUserId = null;
 let currentShippingInfo = null;
+let allOrders = []; // Store all orders
+
+// Modal logic
+const orderModal = document.getElementById('orderModal');
+const orderModalBody = document.getElementById('orderModalBody');
+const orderModalClose = document.getElementById('orderModalClose');
+
+if (orderModalClose) orderModalClose.onclick = () => orderModal.style.display = 'none';
+if (orderModal) orderModal.onclick = (e) => {
+  if (e.target === orderModal) orderModal.style.display = 'none';
+};
+
+// Use a CDN default avatar image
+const DEFAULT_AVATAR_URL = "https://cdn-icons-png.flaticon.com/512/1077/1077012.png";
+
+function showOrderModal(orderData) {
+  let html = `
+    <h2>Order Details</h2>
+    <div class="order-modal-items">
+      ${orderData.items.map(item => `
+        <div class="order-modal-item">
+          <img src="${item.image || 'default-product.png'}" alt="${item.name}">
+          <div class="order-modal-item-details">
+            <div class="order-modal-item-title">${item.name}</div>
+            <div class="order-modal-item-qty">Quantity: ${item.quantity}</div>
+            <div class="order-modal-item-size">Size: ${item.size}</div>
+            <div class="order-modal-item-price">Price: ₱${item.price.toLocaleString()}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div><strong>Status:</strong> ${orderData.status || 'N/A'}</div>
+    <div><strong>Total:</strong> ₱${orderData.total ? orderData.total.toLocaleString() : 0}</div>
+    <div class="order-modal-shipping">
+      <strong>Shipping Info</strong>
+      <span>Name: ${orderData.shippingInfo?.firstName || ''} ${orderData.shippingInfo?.middleName || ''} ${orderData.shippingInfo?.lastName || ''}</span>
+      <span>Address: ${orderData.shippingInfo?.address || ''}</span>
+      <span>Municipality: ${orderData.shippingInfo?.municipality || ''}</span>
+      <span>Province: ${orderData.shippingInfo?.province || ''}</span>
+    </div>
+    <div style="margin-top:10px; font-size:12px; color:#888;">Ordered on: ${orderData.createdAt.toDate().toLocaleString()}</div>
+  `;
+  orderModalBody.innerHTML = html;
+  orderModal.style.display = 'flex';
+}
 
 // Load profile data from Firestore (profiles/{userId})
 async function loadProfile(user) {
@@ -52,10 +101,11 @@ async function loadProfile(user) {
       data = user;
     }
   }
-  profilePic.src = data.photoURL || user.photoURL || "default-avatar.png";
+  profilePic.src = data.photoURL || user.photoURL || DEFAULT_AVATAR_URL;
   profileUsername.textContent = data.username || user.displayName || "-";
   profileGmail.textContent = data.email || user.email || "-";
   profileName.textContent = data.fullName || user.displayName || "-";
+  
   // Load address info from 'information' collection
   const infoDoc = await getDoc(doc(db, "information", user.uid));
   if (infoDoc.exists()) {
@@ -80,6 +130,199 @@ async function loadProfile(user) {
     displayShippingInfo(data);
   } else {
     displayShippingInfo(null);
+  }
+
+  // Load orders
+  await loadOrders(user.uid);
+}
+
+// Load orders from Firestore in real-time
+function loadOrders(userId) {
+  // Clear the list first
+  while (orderList.firstChild) {
+    orderList.removeChild(orderList.firstChild);
+  }
+  noOrders.style.display = "block";
+  noOrders.textContent = "Loading orders...";
+
+  const pendingQuery = query(
+    collection(db, "orders"),
+    where("userId", "==", userId),
+    orderBy("createdAt", "desc")
+  );
+
+  // Listen for real-time updates
+  onSnapshot(pendingQuery, (pendingSnapshot) => {
+    allOrders = [];
+    pendingSnapshot.forEach(docSnap => {
+      const orderData = docSnap.data();
+      orderData._docId = docSnap.id;
+      orderData._source = "orders";
+      if (!orderData.createdAt) {
+        orderData.createdAt = Timestamp.now();
+      } else if (!(orderData.createdAt instanceof Timestamp)) {
+        orderData.createdAt = Timestamp.fromDate(new Date(orderData.createdAt));
+      }
+      allOrders.push(orderData);
+    });
+
+    // Get the current filter from the active button
+    const currentFilter = document.querySelector('.order-filter-btn.active')?.getAttribute('data-filter') || 'all';
+    renderOrders(currentFilter);
+    schedulePendingToCompleted();
+  }, (error) => {
+    console.error("Error loading orders:", error);
+    noOrders.style.display = "block";
+    noOrders.textContent = "Error loading orders. Please try again later.";
+  });
+}
+
+// Schedule pending orders to become completed after 1 minute
+function schedulePendingToCompleted() {
+  allOrders.forEach(order => {
+    if ((order.status || '').toLowerCase() === 'pending' && order._docId) {
+      const now = new Date();
+      const createdAt = order.createdAt.toDate();
+      const elapsed = now - createdAt;
+      const msLeft = 60000 - elapsed; // 1 minute in ms
+
+      if (msLeft > 0) {
+        setTimeout(async () => {
+          try {
+            const orderRef = doc(db, "orders", order._docId);
+            await updateDoc(orderRef, { status: "completed" });
+            // Optionally, reload orders or update UI here
+          } catch (err) {
+            console.error("Failed to update order status:", err);
+          }
+        }, msLeft);
+      } else {
+        (async () => {
+          try {
+            const orderRef = doc(db, "orders", order._docId);
+            await updateDoc(orderRef, { status: "completed" });
+            // Optionally, reload orders or update UI here
+          } catch (err) {
+            console.error("Failed to update order status:", err);
+          }
+        })();
+      }
+    }
+  });
+}
+
+// Render orders based on filter
+function renderOrders(filter) {
+  while (orderList.firstChild) {
+    orderList.removeChild(orderList.firstChild);
+  }
+  let filtered = [];
+  if (filter === 'all') {
+    filtered = allOrders;
+  } else if (filter === 'pending') {
+    filtered = allOrders.filter(o => o.status && o.status.toLowerCase() === "pending");
+  } else if (filter === 'completed') {
+    filtered = allOrders.filter(o => o.status && o.status.toLowerCase() === "completed");
+  }
+  if (filtered.length === 0) {
+    noOrders.style.display = "block";
+    noOrders.textContent = "No orders found";
+    return;
+  }
+  noOrders.style.display = "none";
+  filtered.forEach(orderData => displayOrder(orderData));
+}
+
+// Add event listeners for filter buttons
+function setupOrderFilterButtons() {
+  const filterBtns = document.querySelectorAll('.order-filter-btn');
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      renderOrders(this.getAttribute('data-filter'));
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupOrderFilterButtons();
+});
+
+// Display a single order
+function displayOrder(orderData) {
+  try {
+    console.log('Displaying order:', orderData);
+    const orderElement = orderTemplate.content.cloneNode(true);
+    
+    // Set order status
+    const statusElement = orderElement.querySelector('.order-status');
+    statusElement.textContent = orderData.status || 'Processing';
+    statusElement.classList.add((orderData.status || 'processing').toLowerCase().replace(/\s+/g, '-'));
+
+    // Set order total
+    orderElement.querySelector('.order-total-price').textContent = 
+      `₱${(orderData.total || 0).toLocaleString()}`;
+    
+    // Set order date
+    const orderDate = orderData.createdAt.toDate();
+    orderElement.querySelector('.order-date-value').textContent = 
+      orderDate.toLocaleDateString();
+
+    // Get the container for order items
+    const itemsContainer = orderElement.querySelector('.order-items-container');
+
+    // Add each item in the order
+    if (Array.isArray(orderData.items)) {
+      console.log('Processing order items:', orderData.items.length);
+      orderData.items.forEach(item => {
+        const itemElement = orderItemTemplate.content.cloneNode(true);
+        
+        // Set item details
+        const imgElement = itemElement.querySelector('.order-product-img');
+        imgElement.src = item.image || 'default-product.png';
+        imgElement.onerror = function() {
+          console.log('Image failed to load:', item.image);
+          this.src = 'default-product.png';
+        };
+        
+        itemElement.querySelector('.order-product-title').textContent = item.name || 'Unknown Product';
+        itemElement.querySelector('.size-value').textContent = item.size || 'N/A';
+        itemElement.querySelector('.order-product-qty').textContent = 
+          `x${item.quantity || 1}`;
+        itemElement.querySelector('.order-new-price').textContent = 
+          `₱${(item.price || 0).toLocaleString()}`;
+
+        // Add buy again functionality
+        const buyAgainBtn = itemElement.querySelector('.order-buy-again-btn');
+        buyAgainBtn.addEventListener('click', () => {
+          console.log('Buy again clicked for item:', item);
+          // Store item details in localStorage
+          const buyAgainItem = {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            size: item.size,
+            image: item.image,
+            quantity: 1 // Reset quantity to 1 for new purchase
+          };
+          localStorage.setItem('buyAgainItem', JSON.stringify(buyAgainItem));
+          
+          // Redirect to home page
+          window.location.href = 'home.html';
+        });
+
+        itemsContainer.appendChild(itemElement);
+      });
+    } else {
+      console.log('No items array in order data:', orderData);
+    }
+
+    // Add click event to show modal
+    orderElement.querySelector('.order-card').onclick = () => showOrderModal(orderData);
+    orderList.appendChild(orderElement);
+  } catch (error) {
+    console.error("Error displaying order:", error, orderData);
   }
 }
 

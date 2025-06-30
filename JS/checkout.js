@@ -1,5 +1,6 @@
-// Initialize Firebase with the same config
-const firebaseConfig = {
+// Initialize Firebase with the same config (only if not already initialized)
+if (!firebase.apps.length) {
+  firebase.initializeApp({
     apiKey: "AIzaSyAxApCdOhgO09fIB8_Qw-NSCLPi72aW1Q8",
     authDomain: "walkara.firebaseapp.com",
     projectId: "walkara",
@@ -7,9 +8,8 @@ const firebaseConfig = {
     messagingSenderId: "456097891643",
     appId: "1:456097891643:web:99cadac413780ad62de31e",
     measurementId: "G-5T4ZGKW3Q4"
-};
-
-firebase.initializeApp(firebaseConfig);
+  });
+}
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -300,7 +300,7 @@ function placeOrderWithShippingInfo(shippingInfo) {
 
   // Add order to Firestore
   db.collection('orders').add(orderData)
-    .then(() => {
+    .then((docRef) => {
       // Clear the cart
       return db.collection('users').doc(currentUser.uid).collection('cart').get()
         .then(snapshot => {

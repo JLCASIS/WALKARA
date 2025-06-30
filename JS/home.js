@@ -50,6 +50,35 @@ let cartItems = [];
 function init() {
   renderProducts();
   setupAuthListener();
+  checkBuyAgainItem();
+}
+
+// Check for buy again item in localStorage
+function checkBuyAgainItem() {
+  const buyAgainItem = localStorage.getItem('buyAgainItem');
+  if (buyAgainItem) {
+    const item = JSON.parse(buyAgainItem);
+    // Clear the item from localStorage
+    localStorage.removeItem('buyAgainItem');
+    // Add the item to cart
+    if (currentUser) {
+      cartItems.push(item);
+      updateCartInFirestore();
+      updateCartCount();
+      // Find the product card and animate
+      const productCard = document.querySelector(`.product-card[data-id="${item.id}"]`);
+      if (productCard) {
+        const addToCartBtn = productCard.querySelector('.add-to-cart');
+        addToCartBtn.textContent = "ADDED TO BAG";
+        addToCartBtn.classList.add('added');
+        animateToCart({ image: item.image }, addToCartBtn);
+        setTimeout(() => {
+          addToCartBtn.classList.remove('added');
+          addToCartBtn.textContent = "ADD TO BAG";
+        }, 3000);
+      }
+    }
+  }
 }
 
 // Render products to the page
@@ -87,14 +116,16 @@ function loadCartItems(userId) {
         cartItems.push(doc.data());
       });
       updateCartCount();
+      // Check for buy again item after loading cart
+      checkBuyAgainItem();
     })
     .catch(error => {
       console.error("Error loading cart items:", error);
     });
 }
 
-// Add item to cart - modified to handle button feedback
-function addToCart(productId, button) {
+// Add item to cart in Firestore
+async function addToCart(productId, button) {
   if (!currentUser) {
     alert("Please sign in to add items to your cart");
     return null;
@@ -103,19 +134,24 @@ function addToCart(productId, button) {
   const product = products.find(p => p.id === productId);
   if (!product) return null;
 
-  // Visual feedback - turn button green immediately
+  // Visual feedback
   button.textContent = "ADDED TO BAG";
   button.classList.add('added');
 
-  // Check if product already in cart
-  const existingItemIndex = cartItems.findIndex(item => item.id === productId);
-  
-  if (existingItemIndex >= 0) {
+  const userCartRef = db.collection('users').doc(currentUser.uid).collection('cart');
+  // Check if item already exists in cart
+  const existing = await userCartRef.where('id', '==', product.id).get();
+
+  if (!existing.empty) {
     // Update quantity
-    cartItems[existingItemIndex].quantity += 1;
+    const docRef = existing.docs[0].ref;
+    const data = existing.docs[0].data();
+    await docRef.update({
+      quantity: (data.quantity || 1) + 1
+    });
   } else {
     // Add new item
-    cartItems.push({
+    await userCartRef.add({
       id: product.id,
       name: product.name,
       image: product.image,
@@ -125,18 +161,14 @@ function addToCart(productId, button) {
     });
   }
 
-  // Update Firestore
-  updateCartInFirestore();
-  
   // Update cart count
-  updateCartCount();
+  loadCartItems(currentUser.uid);
 
-  // Set timeout to revert button after 3 seconds
   setTimeout(() => {
     button.classList.remove('added');
     button.textContent = "ADD TO BAG";
   }, 3000);
-  
+
   return product;
 }
 
@@ -206,16 +238,21 @@ function animateToCart(product, button) {
 }
 
 // Event delegation for add to cart buttons
+// Animate first, then update Firestore in background for smoothness
 document.addEventListener('DOMContentLoaded', () => {
   productGrid.addEventListener('click', (e) => {
     if (e.target.classList.contains('add-to-cart')) {
       const productCard = e.target.closest('.product-card');
       const productId = parseInt(productCard.dataset.id);
-      
-      const product = addToCart(productId, e.target);
+
+      // Get product info from local array for instant animation
+      const product = products.find(p => p.id === productId);
       if (product) {
         animateToCart(product, e.target);
       }
+
+      // Firestore write in background
+      addToCart(productId, e.target);
     }
   });
 });
@@ -223,12 +260,14 @@ document.addEventListener('DOMContentLoaded', () => {
 // Initialize the app
 init();
 
-
+// Only add burger menu event listener if the elements exist
 const burger = document.getElementById('burger');
 const navLinks = document.getElementById('navLinks');
 
-burger.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-});
+if (burger && navLinks) {
+  burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+}
 
 

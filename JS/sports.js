@@ -93,8 +93,8 @@ function loadCartItems(userId) {
     });
 }
 
-// Add item to cart - modified to handle button feedback
-function addToCart(productId, button) {
+// Add item to cart in Firestore
+async function addToCart(productId, button) {
   if (!currentUser) {
     alert("Please sign in to add items to your cart");
     return null;
@@ -103,19 +103,24 @@ function addToCart(productId, button) {
   const product = products.find(p => p.id === productId);
   if (!product) return null;
 
-  // Visual feedback - turn button green immediately
+  // Visual feedback
   button.textContent = "ADDED TO BAG";
   button.classList.add('added');
 
-  // Check if product already in cart
-  const existingItemIndex = cartItems.findIndex(item => item.id === productId);
-  
-  if (existingItemIndex >= 0) {
+  const userCartRef = db.collection('users').doc(currentUser.uid).collection('cart');
+  // Check if item already exists in cart
+  const existing = await userCartRef.where('id', '==', product.id).get();
+
+  if (!existing.empty) {
     // Update quantity
-    cartItems[existingItemIndex].quantity += 1;
+    const docRef = existing.docs[0].ref;
+    const data = existing.docs[0].data();
+    await docRef.update({
+      quantity: (data.quantity || 1) + 1
+    });
   } else {
     // Add new item
-    cartItems.push({
+    await userCartRef.add({
       id: product.id,
       name: product.name,
       image: product.image,
@@ -125,51 +130,15 @@ function addToCart(productId, button) {
     });
   }
 
-  // Update Firestore
-  updateCartInFirestore();
-  
   // Update cart count
-  updateCartCount();
+  loadCartItems(currentUser.uid);
 
-  // Set timeout to revert button after 3 seconds
   setTimeout(() => {
     button.classList.remove('added');
     button.textContent = "ADD TO BAG";
   }, 3000);
-  
+
   return product;
-}
-
-// Update cart in Firestore
-function updateCartInFirestore() {
-  if (!currentUser) return;
-
-  const userCartRef = db.collection('users').doc(currentUser.uid).collection('cart');
-  
-  userCartRef.get().then(snapshot => {
-    const batch = db.batch();
-    snapshot.forEach(doc => {
-      batch.delete(doc.ref);
-    });
-    
-    cartItems.forEach(item => {
-      const newDocRef = userCartRef.doc();
-      batch.set(newDocRef, {
-        id: item.id,
-        name: item.name,
-        image: item.image,
-        price: item.price,
-        quantity: item.quantity,
-        size: item.size
-      });
-    });
-    
-    return batch.commit();
-  }).then(() => {
-    console.log("Cart updated in Firestore");
-  }).catch(error => {
-    console.error("Error updating cart:", error);
-  });
 }
 
 // Simplified to only update cart count
@@ -206,29 +175,35 @@ function animateToCart(product, button) {
 }
 
 // Event delegation for add to cart buttons
+// Animate first, then update Firestore in background for smoothness
 document.addEventListener('DOMContentLoaded', () => {
   productGrid.addEventListener('click', (e) => {
     if (e.target.classList.contains('add-to-cart')) {
       const productCard = e.target.closest('.product-card');
       const productId = parseInt(productCard.dataset.id);
-      
-      const product = addToCart(productId, e.target);
+
+      // Get product info from local array for instant animation
+      const product = products.find(p => p.id === productId);
       if (product) {
         animateToCart(product, e.target);
       }
+
+      // Firestore write in background
+      addToCart(productId, e.target);
     }
   });
 });
 
-// Initialize the app
-init();
-
-
+// Fix burger menu error
 const burger = document.getElementById('burger');
 const navLinks = document.getElementById('navLinks');
+if (burger && navLinks) {
+  burger.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+  });
+}
 
-burger.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-});
+// Initialize the app
+init();
 
 

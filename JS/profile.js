@@ -22,17 +22,15 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const profilePic = document.getElementById('profilePic');
+const profileUsername = document.getElementById('profileUsername');
+const profileGmail = document.getElementById('profileGmail');
 const profileName = document.getElementById('profileName');
-const profileEmail = document.getElementById('profileEmail');
+const profileAddress = document.getElementById('profileAddress');
+const profileMunicipality = document.getElementById('profileMunicipality');
+const profileProvince = document.getElementById('profileProvince');
 const logoutBtn = document.getElementById('logoutBtn');
 const backBtn = document.getElementById('backBtn');
-const uploadInput = document.getElementById('profilePicUpload');
-
-// Display elements
-const displayName = document.getElementById('displayName');
-const displayAddress = document.getElementById('displayAddress');
-const displayMunicipality = document.getElementById('displayMunicipality');
-const displayProvince = document.getElementById('displayProvince');
+const changeProfileBtn = document.getElementById('changeProfileBtn');
 
 let currentUserId = null;
 let currentShippingInfo = null;
@@ -42,24 +40,36 @@ async function loadProfile(user) {
   currentUserId = user.uid;
   // Try the new 'profiles' collection first
   const profileDoc = await getDoc(doc(db, "profiles", user.uid));
+  let data = {};
   if (profileDoc.exists()) {
-    const data = profileDoc.data();
-    profilePic.src = data.photoURL || user.photoURL || "default-avatar.png";
-    profileName.textContent = data.username || user.displayName || "No Name";
-    profileEmail.textContent = data.email || user.email || "No Email";
+    data = profileDoc.data();
   } else {
     // Fallback: check "users" collection (old data)
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
-      const data = userDoc.data();
-      profilePic.src = data.photoURL || user.photoURL || "default-avatar.png";
-      profileName.textContent = data.username || user.displayName || "No Name";
-      profileEmail.textContent = data.email || user.email || "No Email";
+      data = userDoc.data();
     } else {
-      profilePic.src = user.photoURL || "default-avatar.png";
-      profileName.textContent = user.displayName || "No Name";
-      profileEmail.textContent = user.email || "No Email";
+      data = user;
     }
+  }
+  profilePic.src = data.photoURL || user.photoURL || "default-avatar.png";
+  profileUsername.textContent = data.username || user.displayName || "-";
+  profileGmail.textContent = data.email || user.email || "-";
+  profileName.textContent = data.fullName || user.displayName || "-";
+  // Load address info from 'information' collection
+  const infoDoc = await getDoc(doc(db, "information", user.uid));
+  if (infoDoc.exists()) {
+    const info = infoDoc.data();
+    profileAddress.textContent = info.address || "-";
+    profileMunicipality.textContent = info.municipality || "-";
+    profileProvince.textContent = info.province || "-";
+    // Optionally, update name if available
+    const fullName = `${info.firstName || ''}${info.middleName ? ' ' + info.middleName : ''} ${info.lastName || ''}`.trim();
+    if (fullName) profileName.textContent = fullName;
+  } else {
+    profileAddress.textContent = "-";
+    profileMunicipality.textContent = "-";
+    profileProvince.textContent = "-";
   }
   
   // Load shipping information from information collection
@@ -76,18 +86,18 @@ async function loadProfile(user) {
 // Display shipping information
 function displayShippingInfo(shippingInfo) {
   if (!shippingInfo) {
-    displayName.textContent = "No information saved";
-    displayAddress.textContent = "-";
-    displayMunicipality.textContent = "-";
-    displayProvince.textContent = "-";
+    profileName.textContent = "No information saved";
+    profileAddress.textContent = "-";
+    profileMunicipality.textContent = "-";
+    profileProvince.textContent = "-";
     return;
   }
 
   const fullName = `${shippingInfo.firstName || ''}${shippingInfo.middleName ? ' ' + shippingInfo.middleName : ''} ${shippingInfo.lastName || ''}`.trim();
-  displayName.textContent = fullName || "No name provided";
-  displayAddress.textContent = shippingInfo.address || "-";
-  displayMunicipality.textContent = shippingInfo.municipality || "-";
-  displayProvince.textContent = shippingInfo.province || "-";
+  profileName.textContent = fullName || "No name provided";
+  profileAddress.textContent = shippingInfo.address || "-";
+  profileMunicipality.textContent = shippingInfo.municipality || "-";
+  profileProvince.textContent = shippingInfo.province || "-";
 }
 
 // Auth state
@@ -98,6 +108,24 @@ onAuthStateChanged(auth, async (user) => {
   }
   await loadProfile(user);
 });
+
+// Handle profile picture upload
+let uploadInput = document.getElementById('profilePicUpload');
+if (!uploadInput) {
+  uploadInput = document.createElement('input');
+  uploadInput.type = 'file';
+  uploadInput.id = 'profilePicUpload';
+  uploadInput.accept = 'image/*';
+  uploadInput.style.display = 'none';
+  document.body.appendChild(uploadInput);
+}
+
+// Change Profile icon triggers file input
+if (changeProfileBtn) {
+  changeProfileBtn.addEventListener('click', () => {
+    uploadInput.click();
+  });
+}
 
 // Handle profile picture upload
 uploadInput.addEventListener('change', async function(e) {
@@ -118,23 +146,19 @@ uploadInput.addEventListener('change', async function(e) {
       // 2. Save metadata in Firestore (profiles/{userId})
       const profileDoc = await getDoc(doc(db, "profiles", currentUserId));
       let profileData = {};
-      
       if (profileDoc.exists()) {
         profileData = profileDoc.data();
       }
-
       profileData.photoURL = data.secure_url;
-      profileData.username = profileName.textContent;
-      profileData.email = profileEmail.textContent;
+      profileData.username = profileUsername ? profileUsername.textContent : '';
+      profileData.email = profileGmail ? profileGmail.textContent : '';
       profileData.cloudinary_public_id = data.public_id;
       profileData.cloudinary_version = data.version;
       profileData.uploadedAt = new Date();
-      
       // Preserve existing shipping info
       if (currentShippingInfo) {
         profileData.shippingInfo = currentShippingInfo;
       }
-
       await setDoc(doc(db, "profiles", currentUserId), profileData, { merge: true });
       profilePic.src = data.secure_url;
       alert("Profile picture updated!");

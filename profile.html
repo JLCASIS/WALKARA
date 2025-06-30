@@ -7,58 +7,75 @@
   <link rel="stylesheet" href="CSS/profile.css"/>
 </head>
 <body>
-  <header class="top-bar">
-    <div class="left-side">
-      <button id="backBtn">← Back</button>
-    </div>
-    <div class="header-title">
-      <h1>Profile</h1>
-    </div>
-    <button id="logoutBtn">Logout</button>
-  </header>
-  
-  <section class="user-info" id="userProfile">
-    <div class="profile-card">
-      <div class="profile-img-wrap">
-        <img id="profilePic" src="default-avatar.png" alt="Profile Picture"/>
-        <label for="profilePicUpload" class="upload-icon" title="Change profile picture">
-          <!-- Camera Icon SVG -->
-          <svg width="28" height="28" fill="#1877f2" viewBox="0 0 24 24">
-            <path d="M12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm-4-3h2.17l.59-1.17A2 2 0 0 1 12.42 4h.97a2 2 0 0 1 1.66.83L15.83 6H18a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zm4 10a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/>
-          </svg>
-          <input type="file" id="profilePicUpload" accept="image/*" style="display:none" />
-        </label>
+  <div class="profile-bg">
+    <header class="top-bar">
+      <button id="backBtn">Back</button>
+      <div class="header-title">
+        <h1>PROFILE</h1>
       </div>
-      
-      <div class="profile-details">
-        <div id="profileName" class="profile-name">Loading...</div>
-        <div id="profileEmail" class="profile-email"></div>
-      </div>
-      
-      <div class="separator-line"></div>
-      
-      <div class="information-section">
-        <h3 class="information-title">My Information</h3>
-        
-        <!-- Display Mode -->
-        <div id="shippingDisplay" class="shipping-display">
-          <div class="shipping-detail">
-            <strong>Name:</strong> <span id="displayName">No information saved</span>
+    </header>
+    <section class="profile-outer">
+      <div class="profile-card-redesign">
+        <div class="profile-content-row">
+          <div class="profile-img-stack">
+            <div class="profile-img-wrap-redesign">
+              <img id="profilePic" src="default-avatar.png" alt="Profile Picture" />
+            </div>
+            <div class="profile-img-actions">
+              <button id="logoutBtn">LOGOUT</button>
+              <span class="profile-edit-icon" id="changeProfileBtn" title="Change Profile">
+                <svg width="22" height="22" fill="#222" viewBox="0 0 24 24">
+                  <path d="M3 17.25V21h3.75l11.06-11.06-3.75-3.75L3 17.25zm14.71-9.04a1.003 1.003 0 0 0 0-1.42l-2.5-2.5a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+              </span>
+            </div>
           </div>
-          <div class="shipping-detail">
-            <strong>Address:</strong> <span id="displayAddress">-</span>
-          </div>
-          <div class="shipping-detail">
-            <strong>Municipality:</strong> <span id="displayMunicipality">-</span>
-          </div>
-          <div class="shipping-detail">
-            <strong>Province:</strong> <span id="displayProvince">-</span>
+          <div class="profile-info-list">
+            <div class="profile-info-item"><span class="profile-label">USERNAME:</span> <span id="profileUsername">-</span></div>
+            <div class="profile-info-item"><span class="profile-label">GMAIL:</span> <span id="profileGmail">-</span></div>
+            <div class="profile-info-item"><span class="profile-label">NAME:</span> <span id="profileName">-</span></div>
+            <div class="profile-info-item"><span class="profile-label">ADDRESS:</span> <span id="profileAddress">-</span></div>
+            <div class="profile-info-item"><span class="profile-label">MUNICIPALITY:</span> <span id="profileMunicipality">-</span></div>
+            <div class="profile-info-item"><span class="profile-label">PROVINCE:</span> <span id="profileProvince">-</span></div>
           </div>
         </div>
+        <div class="profile-divider"></div>
+        <div class="profile-items-label">Items</div>
+        <div class="order-list">
+          <div class="order-card">
+            <div class="order-card-header">
+              <span class="order-tag preferred">Preferred</span>
+              <span class="order-status delivered">Parcel has been delivered</span>
+              <span class="order-status completed">COMPLETED</span>
+            </div>
+            <div class="order-card-body">
+              <img class="order-product-img" src="https://down-ph.img.susercontent.com/file/sg-11134201-7rbk2-lp6w2k1w7k7e7d" alt="Product" />
+              <div class="order-product-info">
+                <div class="order-product-title">Attack Shark X11 Wireless Mouse Paw3311 22000DPI Bluetooth Three Mode Rgb Charging Dock Lightweight</div>
+                <div class="order-product-variation">Variation: X11 White</div>
+                <div class="order-product-qty">x1</div>
+              </div>
+              <div class="order-product-price">
+                <span class="order-old-price">₱2,000</span>
+                <span class="order-new-price">₱1,199</span>
+              </div>
+            </div>
+            <div class="order-card-footer">
+              <div class="order-rate-info">
+                Rate products by <span class="order-rate-date">07/05/2025</span><br />
+                <span class="order-rate-coins">Rate now and get 0.4 coins</span>
+              </div>
+              <div class="order-total">Order Total: <span class="order-total-price">₱983</span></div>
+              <div class="order-actions">
+                <button class="order-buy-again-btn">Buy Again</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="profile-bottom-space"></div>
       </div>
-    </div>
-  </section>
-
+    </section>
+  </div>
   <script type="module" src="JS/profile.js"></script>
 </body>
 </html>

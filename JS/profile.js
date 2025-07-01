@@ -53,6 +53,13 @@ if (orderModal) orderModal.onclick = (e) => {
 // Use a CDN default avatar image
 const DEFAULT_AVATAR_URL = "https://cdn-icons-png.flaticon.com/512/1077/1077012.png";
 
+const authGuard = getAuth();
+onAuthStateChanged(authGuard, function(user) {
+  if (!user) {
+    window.location.href = 'index.html';
+  }
+});
+
 function showOrderModal(orderData) {
   let html = `
     <h2>Order Details</h2>
@@ -247,6 +254,31 @@ function setupOrderFilterButtons() {
 
 document.addEventListener('DOMContentLoaded', () => {
   setupOrderFilterButtons();
+  // Modal logic for logout confirmation
+  const logoutModal = document.getElementById('logoutModal');
+  const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+  const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+
+  if (logoutBtn) logoutBtn.addEventListener('click', () => {
+    if (logoutModal) logoutModal.style.display = 'flex';
+  });
+
+  if (cancelLogoutBtn) cancelLogoutBtn.addEventListener('click', () => {
+    if (logoutModal) logoutModal.style.display = 'none';
+  });
+
+  if (logoutModal) {
+    logoutModal.addEventListener('click', (e) => {
+      if (e.target === logoutModal) logoutModal.style.display = 'none';
+    });
+  }
+
+  if (confirmLogoutBtn) confirmLogoutBtn.addEventListener('click', async () => {
+    await signOut(auth);
+    window.location.href = 'index.html';
+  });
+
+  if (backBtn) backBtn.addEventListener('click', () => window.location.href = 'home.html');
 });
 
 // Display a single order
@@ -413,7 +445,5 @@ uploadInput.addEventListener('change', async function(e) {
   }
 });
 
-// Logout & Back
-if (logoutBtn) logoutBtn.addEventListener('click', async () => { await signOut(auth); window.location.href = 'index.html'; });
-if (backBtn) backBtn.addEventListener('click', () => window.location.href = 'home.html');
+
 

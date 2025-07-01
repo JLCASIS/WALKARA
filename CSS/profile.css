@@ -694,3 +694,63 @@ select:focus {
   color: #fff;
 }
 
+/* Logout Confirmation Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.confirmation-modal {
+  background-color: #fff;
+  padding: 28px 24px 24px 24px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  animation: popupFadeIn 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.confirmation-modal h3 {
+  margin-top: 0;
+  color: #b10e0e;
+}
+.confirmation-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 20px;
+}
+.confirmation-buttons button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+.confirm-delete {
+  background-color: #b10e0e;
+  color: #fff;
+}
+.confirm-delete:hover {
+  background-color: #a00c0c;
+}
+.cancel-delete {
+  background-color: #f0f0f0;
+  color: #222;
+}
+.cancel-delete:hover {
+  background-color: #e0e0e0;
+}
+@keyframes popupFadeIn {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+

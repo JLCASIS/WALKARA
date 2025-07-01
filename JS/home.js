@@ -1,5 +1,6 @@
-// Initialize Firebase
-const firebaseConfig = {
+// Initialize Firebase (compat style)
+if (!firebase.apps.length) {
+  firebase.initializeApp({
     apiKey: "AIzaSyAxApCdOhgO09fIB8_Qw-NSCLPi72aW1Q8",
     authDomain: "walkara.firebaseapp.com",
     projectId: "walkara",
@@ -7,9 +8,15 @@ const firebaseConfig = {
     messagingSenderId: "456097891643",
     appId: "1:456097891643:web:99cadac413780ad62de31e",
     measurementId: "G-5T4ZGKW3Q4"
-};
+  });
+}
+// Authentication Guard: Redirect to login if not authenticated
+firebase.auth().onAuthStateChanged(function(user) {
+  if (!user) {
+    window.location.href = 'index.html';
+  }
+});
 
-firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -269,5 +276,3 @@ if (burger && navLinks) {
     navLinks.classList.toggle('active');
   });
 }
-
-

@@ -1,4 +1,4 @@
-// Initialize Firebase with the same config (only if not already initialized)
+// Initialize Firebase (compat style)
 if (!firebase.apps.length) {
   firebase.initializeApp({
     apiKey: "AIzaSyAxApCdOhgO09fIB8_Qw-NSCLPi72aW1Q8",
@@ -10,6 +10,13 @@ if (!firebase.apps.length) {
     measurementId: "G-5T4ZGKW3Q4"
   });
 }
+// Authentication Guard: Redirect to login if not authenticated
+firebase.auth().onAuthStateChanged(function(user) {
+  if (!user) {
+    window.location.href = 'index.html';
+  }
+});
+
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -49,8 +56,6 @@ function setupAuthListener() {
       loadCartItems(user.uid);
     } else {
       userProfile.src = "https://cdn-icons-png.flaticon.com/512/1077/1077012.png";
-      alert("Successfully Logout.");
-      window.location.href = "home.html";
     }
   });
 }

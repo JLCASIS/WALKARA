@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     createdAt: new Date()
                 });
                 
-                alert('Account created successfully!');
+                showPopup('Account created successfully!', 'success');
                 signupBox.style.display = 'none';
                 loginBox.style.display = 'block';
                 
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
             } catch (error) {
                 console.error("Error signing up:", error);
-                alert(error.message);
+                showPopup(getFriendlyErrorMessage(error), 'error');
             }
         });
     }
@@ -114,15 +114,65 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 await signInWithEmailAndPassword(auth, email, password);
-                alert('Account login successfully!');
-                window.location.href = 'home.html';
+                showPopup('Account login successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
             } catch (error) {
                 console.error("Error logging in:", error);
-                alert(error.message);
+                showPopup(getFriendlyErrorMessage(error), 'error');
             }
         });
     } 
 
+    // Popup message logic
+    function showPopup(message, type = 'success') {
+        const popup = document.getElementById('popupMessage');
+        const popupContent = document.querySelector('.popup-content');
+        const popupText = document.getElementById('popupText');
+        popupText.textContent = message;
+        popupContent.classList.remove('success', 'error');
+        popupContent.classList.add(type);
+        popup.style.display = 'flex';
+    }
 
+    function hidePopup() {
+        document.getElementById('popupMessage').style.display = 'none';
+    }
 
+    const closePopupBtn = document.getElementById('closePopupBtn');
+    if (closePopupBtn) {
+        closePopupBtn.addEventListener('click', hidePopup);
+    }
+
+    const popupMessage = document.getElementById('popupMessage');
+    if (popupMessage) {
+        popupMessage.addEventListener('click', function(e) {
+            if (e.target === this) hidePopup();
+        });
+    }
 });
+
+// Map Firebase error codes to user-friendly messages
+function getFriendlyErrorMessage(error) {
+    if (!error || !error.code) return 'An unknown error occurred.';
+    switch (error.code) {
+        case 'auth/invalid-email':
+            return 'Please enter a valid email address.';
+        case 'auth/user-not-found':
+            return 'No account found with this email.';
+        case 'auth/wrong-password':
+            return 'Incorrect password. Please try again.';
+        case 'auth/email-already-in-use':
+            return 'This email is already registered. Please log in or use another email.';
+        case 'auth/weak-password':
+            return 'Password should be at least 6 characters.';
+        case 'auth/missing-password':
+            return 'Please enter your password.';
+        case 'auth/missing-email':
+            return 'Please enter your email address.';
+        default:
+            return error.message || 'An unknown error occurred.';
+    }
+}
+
